@@ -27,7 +27,7 @@ export const Navbar = () => {
                         <img
                             src={user?.photoURL || ""}
                             alt="Profile"
-                            className="w-10 h-10 rounded-full"
+                            className="w-10 h-10 rounded-full border-2 border-black"
                         />
                         <button
                             onClick={signUserOut}

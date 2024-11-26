@@ -2,10 +2,11 @@ import { CreateForm } from "./create-form";
 
 export const CreatePost = () => {
     return (
-        
-        <div>
+        <div className="py-5">
             Create a Post!
-            { <CreateForm /> }
+            <div className="py-5">
+                { <CreateForm /> }
+            </div>
         </div>
     );
 };

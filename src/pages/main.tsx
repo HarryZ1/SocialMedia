@@ -1,3 +1,7 @@
 export const Main = () => {
-    return <div> Home Page </div>;
+    return (
+        <div className="py-5"> 
+            Home Page 
+        </div>
+    );
 };

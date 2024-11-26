@@ -13,7 +13,7 @@ export const Login = () => {
     }
 
     return (
-        <div> 
+        <div className="py-5 space-y-4"> 
             <p> Sign in With Google To Continue</p>
             <button onClick={signInWithGoogle}> Sign in With Google </button>
         </div>
