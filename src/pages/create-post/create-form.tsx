@@ -1,6 +1,11 @@
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { addDoc, collection } from "firebase/firestore";
+import { db, auth } from "../../config/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
+
 
 interface FormData {
     title: string;
@@ -8,24 +13,38 @@ interface FormData {
 }
 
 export const CreateForm = () => {
+
+    const [user] = useAuthState(auth);
+    const navigate = useNavigate();
+
     const schema = yup.object().shape({
         title: yup.string().required("The title of the post is required"),
-        description: yup.string().required("The description of the post is required"),
+        description: yup.string().required("The description of the post is required").min(20).max(200),
     });
 
-    const { register, handleSubmit, formState: {errors} } = useForm({
+    const { register, handleSubmit, formState: {errors} } = useForm<FormData>({
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = (data: FormData) => {
-        console.log(data);
+    const postsRef = collection(db, "posts");
+
+    const onCreatePost = async (data: FormData) => {
+        await addDoc(postsRef, {
+        //    title: data.title,
+        //    description: data.description, can be written as ...data
+            ...data,
+            username: user?.displayName,
+            userId: user?.uid,
+        });
+
+        navigate("/");
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}> 
-            <input type="text" placeholder="Title" {...register("title")}/>
+        <form onSubmit={handleSubmit(onCreatePost)}> 
+            <input type="text" placeholder="Title..." {...register("title")}/>
             <p>{errors.title?.message}</p>
-            <input type="text" placeholder="Description" {...register("description")}/>
+            <textarea placeholder="Description..." {...register("description")}/>
             <p>{errors.description?.message}</p>
             <input type="submit"/>
         </form>
